@@ -7,5 +7,6 @@ class Student(models.Model):
     email = models.EmailField(unique=True)
     # department = models.ForeignKey(Department, on_delete=models.CASCADE)
     def __str__(self):
-        #returns human readable representation of each student instance
+        #returns human readable 
+        # representation of each student instance
         return self.name
