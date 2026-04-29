@@ -14,21 +14,21 @@ class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
     serializer_class = StudentSerializer #tells DRF how serialize/deserialize the Student data
     # ModelViewSet automatically provides list, retrieve, create, update and destroy actions.
 
-    @action(detail=True, methods=['GET'])
-    # detail specifies whether the custom action is bound to a single instance of the resource (detail view) or to the entire resource collection (list view).
-    
-    def top_students(self, request, pk=None):
+    @action(detail=False, methods=['GET'])
+    # Use detail=True when working with ONE object, depends on pk   
+    def top_students(self, request):
         # custom action logic for GET request
         students = Student.objects.filter(age__gte=100)
         # retrieves data/perform any operation based on the instance with 'pk'
         serializer = self.get_serializer(students, many=True)
-        # when detail=True, the custom action is associated with a single instance of the resource and is accessed through the URL pattern containing the instance's primary key
-        
-        return Response({'message': f'Custom GET Action executed for instance {pk}'})
-        # return Response({
-        #     "status": "success",
-        #     "data": serializer.data
-        # })
+        # when detail=True, the custom action is associated with a single instance of the resource 
+        # and is accessed through the URL pattern containing the instance's primary key /students/{id}/top_students/ and is accessed with Response like this:
+        # return Response({'message': f'Custom GET Action executed for instance {pk}'})
+        return Response({
+            "status": "success",
+            "count" : len(serializer.data),
+            "data": serializer.data #data ia the output. After creating a serializer, you get serializer.data
+        })
     # to trigger GET : http://localhost:8000/myviewset/{pk}/custom_get_action/    
 
 
