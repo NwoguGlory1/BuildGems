@@ -2,10 +2,10 @@
 
 # ViewSets provide CRUD operations in one place
 from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework import viewsets
 from .models import Student
 from .serializers import StudentSerializer
+from .utils.response import api_response
 
 
 
@@ -14,28 +14,28 @@ class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
     serializer_class = StudentSerializer #tells DRF how serialize/deserialize the Student data
     # ModelViewSet automatically provides list, retrieve, create, update and destroy actions.
 
+
     @action(detail=False, methods=['GET'])
     # Use detail=True when working with ONE object, depends on pk   
     def top_students(self, request):
         # custom action logic for GET request
         students = Student.objects.filter(age__gte=100)
-        # retrieves data/perform any operation based on the instance with 'pk'
+  
         serializer = self.get_serializer(students, many=True)
-        # when detail=True, the custom action is associated with a single instance of the resource 
-        # and is accessed through the URL pattern containing the instance's primary key /students/{id}/top_students/ and is accessed with Response like this:
-        # return Response({'message': f'Custom GET Action executed for instance {pk}'})
-        return Response({
-            "status": "success",
-            "count" : len(serializer.data),
-            "data": serializer.data #data ia the output. After creating a serializer, you get serializer.data
-        })
-    # to trigger GET : http://localhost:8000/myviewset/{pk}/custom_get_action/    
+       
+        data = serializer.data 
+        return api_response( success=True,
+            message="Retrieved successfully",
+            data=data,
+            errors=None
+            )
 
 
-    @action(detail=False, methods=['POST'])
-    def custom_post_action(self, request, pk=None):
-    # custom action logic for POST request
-    # perform any operation based with the posted data 
-        return Response({'message': 'Custom POST Action executed successfully'})
-    # to triggerPOST :http://localhost:8000/myviewset/custom_post_action/    
-    #    when detail=False, the custom action is associated with the entire resource and is accessed through the URL pattern without any instance's primary key
+    # @action(detail=False, methods=['POST'])
+    # def custom_post_action(self, request, pk=None):
+    # # custom action logic for POST request
+    # # perform any operation based with the posted data 
+    #     return Response({'message': 'Custom POST Action executed successfully'})
+    # # to triggerPOST :http://localhost:8000/myviewset/custom_post_action/    
+    #    when detail=False, the custom action is associated with the entire resource
+    #  and is accessed through the URL pattern without any instance's primary key, /students/top_students
