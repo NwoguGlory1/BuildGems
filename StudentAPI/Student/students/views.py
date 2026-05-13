@@ -4,6 +4,7 @@
 from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework.response import Response
+import django_filters.rest_framework
 
 from .models import Student
 from .serializers import StudentSerializer
@@ -13,7 +14,11 @@ class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
     queryset = Student.objects.all() #defines the set of objects available via the API.
     serializer_class = StudentSerializer #tells DRF how serialize/deserialize the Student data
     # ModelViewSet automatically provides list, retrieve, create, update and destroy actions.
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
 
+    # using the special DRF config attribute, filterset_fields to filter:
+    filterset_fields = ['id', 'name', 'age']
+# example: {{student_base_url}}/students/?id=3&name=KesingKaesing BuildGems
 
     @action(detail=False, methods=['GET'])
     # Use detail=True when working with ONE object, depends on pk   
@@ -28,6 +33,7 @@ class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
 
         # CustomRenderer is global from settings.py, so you dont need to call it
         return Response(serializer.data)
+
 
 
     # @action(detail=False, methods=['POST'])

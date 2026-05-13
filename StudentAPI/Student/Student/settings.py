@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'students', #student app added
     'rest_framework', #Restfrmework added
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -125,6 +126,10 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+        ],
+    
     'DEFAULT_RENDERER_CLASSES': [
         'students.renderers.CustomRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
