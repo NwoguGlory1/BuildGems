@@ -3,10 +3,10 @@
 # ViewSets provide CRUD operations in one place
 from rest_framework.decorators import action
 from rest_framework import viewsets
+from rest_framework.response import Response
+
 from .models import Student
 from .serializers import StudentSerializer
-from .utils.response import api_response
-
 
 
 class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
@@ -23,12 +23,8 @@ class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
   
         serializer = self.get_serializer(students, many=True)
        
-        data = serializer.data 
-        return api_response( success=True,
-            message="Retrieved successfully",
-            data=data,
-            errors=None
-            )
+        # data = serializer.data  #After creating a serializer, you get serializer.data
+        return Response(serializer.data)
 
 
     # @action(detail=False, methods=['POST'])
