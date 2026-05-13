@@ -23,7 +23,10 @@ class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
   
         serializer = self.get_serializer(students, many=True)
        
-        # data = serializer.data  #After creating a serializer, you get serializer.data
+        data = serializer.data  #After creating a serializer, you get serializer.data
+        # print(type(data))
+
+        # CustomRenderer is global from settings.py, so you dont need to call it
         return Response(serializer.data)
 
 
