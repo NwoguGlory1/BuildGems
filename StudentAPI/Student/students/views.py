@@ -19,6 +19,8 @@ class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
     # using the special DRF config attribute, filterset_fields to filter:
     filterset_fields = ['id', 'name', 'age']
 # example: {{student_base_url}}/students/?id=3&name=KesingKaesing BuildGems
+# {{student_base_url}}/students/?id=3&name=KesingKaesing BuildGems&age=87
+
 
     @action(detail=False, methods=['GET'])
     # Use detail=True when working with ONE object, depends on pk   
@@ -31,6 +33,7 @@ class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
         data = serializer.data  #After creating a serializer, you get serializer.data
         # print(type(data))
 
+        # DRF received the response object & calls renderer automatically
         # CustomRenderer is global from settings.py, so you dont need to call it
         return Response(serializer.data)
 

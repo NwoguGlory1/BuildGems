@@ -8,10 +8,8 @@ class CustomRenderer(JSONRenderer):
     def render(self, data, accepted_media_type=None, renderer_context=None):
         # extracts the DRF Response object from Response class returned in response.py.
         response = renderer_context['response']
-
+        # reads status code
         status_code = response.status_code
-
-        
         success = True if status_code < 400 else False
 
         # makes sure data is correctly counted;
@@ -22,7 +20,7 @@ class CustomRenderer(JSONRenderer):
         else:
             count = 0
 
-        # custom wrapper function
+        # custom wrapper function wraps data
         wrapped_response = {
             "success": success,
             "message": "Request successful" if success else "Request failed",
@@ -33,5 +31,8 @@ class CustomRenderer(JSONRenderer):
             "errors": None if success else data
         }
 
-    # super() calls the parent: JSONRenderer
+# print(type(wrapped_response)) is a dict because the customrender does not convert the python dict to json yet.
+
+
+    # super() calls the parent: JSONRenderer, going to the original render() method in JSONRenderer that converts it to JSON 
         return super().render(wrapped_response, accepted_media_type, renderer_context)
