@@ -8,20 +8,26 @@ from rest_framework import filters
 import django_filters.rest_framework
 
 from .models import Student
-from .serializers import StudentSerializer
+from .serializers import (StudentSerializerV1, StudentSerializerV2)
 
 
 class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
     queryset = Student.objects.all() #defines the set of objects available via the API.
-    serializer_class = StudentSerializer #tells DRF how serialize/deserialize the Student data
+    serializer_class = StudentSerializerV1 #tells DRF how serialize/deserialize the Student data
     # ModelViewSet automatically provides list, retrieve, create, update and destroy actions.
-    # filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
 
     # Automatic filtering using the special DRF config attribute, filterset_fields to filter:
     # filterset_fields = ['id', 'name', 'age']
     # example: {{student_base_url}}/students/?id=3&name=KesingKaesing BuildGems
     # {{student_base_url}}/students/?id=3&name=KesingKaesing BuildGems&age=87
 
+    def get_serializer_class(self):
+        if self.request.version == 'v2':
+            return StudentSerializerV2
+        return StudentSerializerV1
+
+    
     # Manual filtering using .get_queryset()
     def get_queryset(self):
         queryset = super().get_queryset()
