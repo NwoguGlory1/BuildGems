@@ -8,11 +8,13 @@ from rest_framework import filters
 import django_filters.rest_framework
 from .models import Student
 from .serializers import (StudentSerializerV1, StudentSerializerV2)
-
+from .pagination import StudentPagination
 
 class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
     queryset = Student.objects.all() #defines the set of objects available via the API.
     serializer_class = StudentSerializerV1 #tells DRF how serialize/deserialize the Student data
+    # Custom pagination class
+    pagination_class = StudentPagination
     # ModelViewSet automatically provides list, retrieve, create, update and destroy actions.
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
 
