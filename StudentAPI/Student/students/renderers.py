@@ -15,10 +15,10 @@ class CustomRenderer(JSONRenderer):
         # makes sure data is correctly counted;
         if isinstance(data, list):
             count = len(data)
-        elif isinstance(data, dict):
-            count = 1
-        else:
+        elif data is None:
             count = 0
+        else:
+            count = 1
 
         # custom wrapper function wraps data
         wrapped_response = {
