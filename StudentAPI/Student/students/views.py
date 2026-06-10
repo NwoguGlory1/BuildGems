@@ -6,7 +6,6 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import filters
 import django_filters.rest_framework
-
 from .models import Student
 from .serializers import (StudentSerializerV1, StudentSerializerV2)
 
@@ -27,6 +26,11 @@ class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
             return StudentSerializerV2
         return StudentSerializerV1
 
+#Helps avoid parse error on POSTMAN on delete request 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response({})
     
     # Manual filtering using .get_queryset()
     def get_queryset(self):
