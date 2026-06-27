@@ -21,4 +21,6 @@ from django.urls import path, include #Import Include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/<str:version>/', include("students.urls")), #Includes app urls here
+    #matches /api/v1/ then includes the app's urls.py
+
 ]

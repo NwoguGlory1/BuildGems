@@ -43,11 +43,12 @@ class SignUpSerializer(serializers.ModelSerializer):
         email = self.validated_data['email']
 
         user = User.objects.create_user(
+            #this method creates the user and hashes the password automatically
             username=email,
             email=email,
             password=validated_data['password']
         )
-        return user
+        return user #returns actual User instance that was created.
     
 # Login Serializer
 class LoginSerializer(serializers.Serializer):
@@ -79,9 +80,21 @@ class LoginSerializer(serializers.Serializer):
         
         # user = authenticate(username=email, password=password) #django's inbuilt check, not needed cause you did manual authentication
 
+#           Before the line below, it is:
+        # {
+        #     "email": "glory@gmail.com",
+        #     "password": "secret123"
+        # }
         value['user'] = user
+        #After this line above, it becomes;
+#         {
+        #     "email": "glory@gmail.com",
+        #     "password": "secret123",
+        #     "user": <User object>
+# }
         return value
-        
+    # So ["user"] is just a key you created yourself in the serializer, and DRF stores it in validated_data when you return it.    
+
 # TokenResponse Serializer
 class TokenResponseSerializer(serializers.Serializer):
     access = serializers.CharField()

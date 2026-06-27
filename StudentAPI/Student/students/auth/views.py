@@ -21,9 +21,12 @@ class SignUpView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request,  *args, **kwargs):
+        #args and kwargs takes care of the /api/v1/students/5/ kwargs = {"pk": 5} 
+        # DRF may pass extra URL parameters such as pk through *args/**kwargs for detail routes like /api/v1/students/5/; accepting them keeps this view compatible with routed requests.
         serializer = SignUpSerializer(data=request.data)
 
-        if not serializer.is_valid():
+        if not serializer.is_valid(): 
+            #calls all validation methods in the serializer class eg field validation methods like: validate(), cross-field validation methods like: validate_email()
             return Response(
                serializer.errors,
                status=status.HTTP_400_BAD_REQUEST, 
@@ -38,8 +41,8 @@ class SignUpView(APIView):
                 },
             },
             status=status.HTTP_201_CREATED,
-        )   
-                
+    )     
+   
 class LoginView(APIView):
            """public endpoint POST /api/v1/auth/login"""
            permission_classes = [AllowAny]
@@ -52,6 +55,11 @@ class LoginView(APIView):
                         status=status.HTTP_400_BAD_REQUEST, 
                     )
                 user = serializer.validated_data['user']
+                #user contains user email, user password and User instance as in:
+                #  {
+        #           "email": "glory@gmail.com",
+        #           "password": "secret123",
+        #   and it is passed into:
                 tokens = get_tokens_for_user(user)
                 return Response({
                    "message": "Login successful",
@@ -62,7 +70,7 @@ class LoginView(APIView):
                      "tokens": tokens,  
                 },
                 status=status.HTTP_200_OK,
-)
+    )
 
 class LogoutView(APIView):
     """ Protected endpoint that blacklists the refresh token POST /api/v1/auth/logout"""
