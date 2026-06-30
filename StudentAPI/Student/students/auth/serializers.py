@@ -22,6 +22,7 @@ class SignUpSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+        #use Meta class to connect a serializer to a DRF model
         model = User   # uses django  inbuilt user model
         fields = ['email', 'password', 'confirm_password']
 

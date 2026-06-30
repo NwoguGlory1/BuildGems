@@ -1,3 +1,4 @@
+# general student-related views/ViewSet
 # from django.shortcuts import render for normal rendering
 
 # ViewSets provide CRUD operations in one place

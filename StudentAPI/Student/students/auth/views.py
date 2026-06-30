@@ -1,3 +1,4 @@
+# views for authentication logic
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -46,6 +47,7 @@ class SignUpView(APIView):
 class LoginView(APIView):
            """public endpoint POST /api/v1/auth/login"""
            permission_classes = [AllowAny]
+           #every view is protected because of in settings.py but you override the views you want with this
            def post(self, request,  *args, **kwargs):
                 serializer = LoginSerializer(data=request.data)
             

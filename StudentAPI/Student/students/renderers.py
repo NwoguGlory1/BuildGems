@@ -31,8 +31,5 @@ class CustomRenderer(JSONRenderer):
             "errors": None if success else data
         }
 
-# print(type(wrapped_response)) is a dict because the customrender does not convert the python dict to json yet.
-
-
     # super() calls the parent: JSONRenderer, going to the original render() method in JSONRenderer that converts it to JSON 
         return super().render(wrapped_response, accepted_media_type, renderer_context)
