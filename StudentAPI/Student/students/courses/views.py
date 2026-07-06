@@ -14,7 +14,6 @@ COURSES_DATA = [
 
 class CourseListView(APIView):
     # GET /api/v1/auth/courses/
-    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         # Django may pass URL keyword arguments such as version from the URL pattern.
@@ -23,3 +22,19 @@ class CourseListView(APIView):
             "count": len(COURSES_DATA),
             "data": COURSES_DATA,
         })
+    
+# class CourseDetailView(APIView):
+#     """GET /api/v1/courses/<int:course_id>/"""
+#     def get(self, request, course_id):
+#         course = next(
+#             (c for c in COURSES_DATA if c["id"] == course_id),
+#             None
+#         )
+
+#         if not course:
+#             return Response(
+#                 {"detail": f"Course with id {course_id} not found."},
+#                 status=404,
+#             )
+
+#         return Response({"data": course})
