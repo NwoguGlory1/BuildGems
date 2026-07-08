@@ -25,7 +25,7 @@ class CourseListView(APIView):
     
 # class CourseDetailView(APIView):
 #     """GET /api/v1/courses/<int:course_id>/"""
-#     def get(self, request, course_id):
+#     def get(self, request, course_id,  *args, **kwargs):
 #         course = next(
 #             (c for c in COURSES_DATA if c["id"] == course_id),
 #             None

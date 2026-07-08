@@ -14,3 +14,4 @@ class Student(models.Model):
         #returns human readable 
         # representation of each student instance
         return self.name
+    

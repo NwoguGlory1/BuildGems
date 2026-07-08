@@ -173,6 +173,25 @@ SIMPLE_JWT = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": "redis://127.0.0.1:6379/0", # db 0
+        # LOCATION format: redis://host:port/db_number
+         # Redis has 16 databases (0-15). Use different ones to namespace:
+        # db 0 → general cache
+        # db 1 → sessions (later)
+        # db 2 → rate limiting (later)
+    'OPTIONS':{
+        # Options monitors the behaviour of the cache
+        'CLIENT_CLASS': 'django_redis.client.DefaultClient', #Use the standard Redis client.
+        'SOCKET_CONNECT_TIMEOUT': 5,  # maximum time allowed to establish a connection, before connection fails
+        'SOCKET_TIMEOUT': 5, # maximum time for a command after the connection has already been made.
+        'IGNORE_EXCEPTIONS': True,  # CRITICAL: if Redis is down, fall back gracefully
+            # WHY IGNORE_EXCEPTIONS=True? Redis is a cache — a luxury, not a requirement.
+            # If Redis goes down, your app should still work (slower, from DB).
+            # Without this, a Redis outage takes down your entire API.
+    },
+
+    'KEY_PREFIX': 'student_api',
+    # A string that will be automatically included (prepended by default) to all cache keys used by the Django server
+    #django can store as: student_api:departments and wont conflict another project name
     }
 }

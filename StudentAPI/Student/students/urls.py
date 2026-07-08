@@ -6,6 +6,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import StudentViewSet
 from .courses.views import CourseListView
+from .departments.views import  DepartmentListView
 
 
 router = DefaultRouter()
@@ -15,6 +16,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('auth/', include('students.auth.urls')),
     #matches /auth
-    path('courses/', CourseListView.as_view(), name='course-list' )
+    path('courses/', CourseListView.as_view(), name='course-list'),
+    path('departments/', DepartmentListView.as_view(), name='department-list'),
 ]
 # Using DefaultRouter, don’t need to manually define each URL for CRUD operations. It automatically creates standard RESTful endpoints 

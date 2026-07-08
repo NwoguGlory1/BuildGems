@@ -1,7 +1,7 @@
 #convert model instances into JSON and validate incoming JSON data
 
 from rest_framework import serializers
-from .models import Student
+from .models import Student, Department
 
 class StudentSerializerV1(serializers.ModelSerializer):
     "handles serialization & deserialization automatically when using ModelViewSet"
@@ -16,3 +16,8 @@ class StudentSerializerV2(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ['id', 'name', 'age', 'email', 'department' ]
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = ['id', 'name']
