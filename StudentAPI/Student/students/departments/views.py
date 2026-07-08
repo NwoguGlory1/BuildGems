@@ -14,7 +14,7 @@ class DepartmentListView(APIView):
          # Step 1: Try cache first
         cached_data = cache.get(DEPARTMENTS_CACHE_KEY)
 
-        if cached_data:
+        if cached_data is not None:
             return Response(
                 {
                   "source": "cache",

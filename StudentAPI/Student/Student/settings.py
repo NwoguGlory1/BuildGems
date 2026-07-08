@@ -193,5 +193,6 @@ CACHES = {
     'KEY_PREFIX': 'student_api',
     # A string that will be automatically included (prepended by default) to all cache keys used by the Django server
     #django can store as: student_api:departments and wont conflict another project name
+    # Another project stores ecommerce:departments
     }
 }
