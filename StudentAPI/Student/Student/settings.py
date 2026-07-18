@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt', #for localizations/translations
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
+    "django_celery_beat", 
+    # 'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -175,10 +178,7 @@ CACHES = {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/0", # db 0
         # LOCATION format: redis://host:port/db_number
-         # Redis has 16 databases (0-15). Use different ones to namespace:
-        # db 0 → general cache
-        # db 1 → sessions (later)
-        # db 2 → rate limiting (later)
+
     'OPTIONS':{
         # Options monitors the behaviour of the cache
         'CLIENT_CLASS': 'django_redis.client.DefaultClient', #Use the standard Redis client.
@@ -195,4 +195,25 @@ CACHES = {
     #django can store as: student_api:departments and wont conflict another project name
     # Another project stores ecommerce:departments
     }
+}
+# Django's built-in SMTP backend.
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = config("EMAIL_HOST", default='smtp.gmail.com')
+EMAIL_PORT = config("EMAIL_PORT", cast=int)
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+
+
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/1"    # ← db 1 = BROKER
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/2" # ← db 2 = TASK RESULTS
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    "hello-every-minute": {
+        "task": "students.tasks.say_hello",
+        "schedule": crontab(),
+    },
 }

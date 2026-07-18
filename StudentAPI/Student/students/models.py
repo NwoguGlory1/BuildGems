@@ -9,9 +9,15 @@ class Student(models.Model):
     age = models.IntegerField()
     email = models.EmailField(unique=True)
     department = models.ForeignKey('Department', on_delete=models.SET_NULL, null=True)
-    
+    birthday = models.DateField()
+    #relationship between student and courses
+    courses = models.ManyToManyField('Course')
+
     def __str__(self):
         #returns human readable 
         # representation of each student instance
         return self.name
     
+class Course(models.Model):
+    name = models.CharField(max_length=200)
+    code = models.CharField(max_length=20)

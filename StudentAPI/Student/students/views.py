@@ -56,7 +56,6 @@ class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
         students = Student.objects.filter(age__gte=100)
         serializer = self.get_serializer(students, many=True)
         data = serializer.data  #After creating a serializer, you get serializer.data
-        # print(type(data)) test this
 
         # DRF received the response object & calls renderer automatically
         # CustomRenderer is global from settings.py, so you dont need to call it
