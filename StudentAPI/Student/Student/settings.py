@@ -203,8 +203,14 @@ EMAIL_PORT = config("EMAIL_PORT", cast=int)
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
 
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@studentapi.com')
+DEFAULT_FROM_NAME = config('DEFAULT_FROM_NAME', default='Student API')
+
+# Connection timeout in seconds
+# WHY? SMTP servers can be slow. Without a timeout, a hung connection
+# blocks your worker forever. 10 seconds is a reasonable ceiling.
+EMAIL_TIMEOUT = 10
 
 CELERY_BROKER_URL = "redis://127.0.0.1:6379/1"    # ← db 1 = BROKER
 CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/2" # ← db 2 = TASK RESULTS
