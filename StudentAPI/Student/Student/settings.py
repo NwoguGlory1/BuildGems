@@ -218,8 +218,18 @@ CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/2" # ← db 2 = TASK RESULTS
 from celery.schedules import crontab
 
 CELERY_BEAT_SCHEDULE = {
-    "hello-every-minute": {
+    "send-all-students": {
         "task": "students.tasks.send_email_to_all_students",
         "schedule": crontab(),
+    },
+
+    "birthday-emails": {
+        "task": "students.tasks.send_birthday_emails",
+        "schedule": crontab(hour=8, minute=0),
+    },
+
+    "math-course-emails": {
+        "task": "students.tasks.send_math_students_email",
+        "schedule": crontab(hour=9, minute=0),
     },
 }

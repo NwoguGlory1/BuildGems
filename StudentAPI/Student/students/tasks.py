@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .models import Student
 from datetime import date
+from students.models import Course
 
 
 @shared_task
@@ -19,7 +20,9 @@ def send_email_to_student(student_id):
 
     send_mail(
         subject="Testing Celery",
-            message = "Hello",
+            message = f"""
+            Hello, {student.name}
+            """,         
             from_email= settings.DEFAULT_FROM_EMAIL,  # Use the same Gmail in EMAIL_HOST_USER in .env
             recipient_list=[student.email],
             fail_silently=False,
@@ -37,6 +40,7 @@ def send_email_to_all_students():
     for student in students:
         send_email_to_student.delay(student.id)
 
+# for debugging to print invalid emails I used initially to create some student accounts that gave me error 
     # for student in students:
     #     try:
     #         send_mail(
@@ -51,8 +55,22 @@ def send_email_to_all_students():
     #         print(e)
         
 @shared_task
-def send_email_to_birthday_students():
+def send_birthday_emails():
 # Students with birthdays today, loop, queue task 1
-    students = Student.objects.filter(birthday=datetime.now)
+    today = date.today()
+    students = Student.objects.filter(
+        birthday__month=today.month,
+        birthday__day=today.day,
+        )
+    for student in students:
+        send_email_to_student.delay(student.id)
+
+@shared_task
+def send_math_students_email():
+
+    maths = Course.objects.get(name="Mathematics")
+
+    students = maths.student_set.all()
+
     for student in students:
         send_email_to_student.delay(student.id)

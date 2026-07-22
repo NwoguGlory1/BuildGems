@@ -4,6 +4,10 @@ from django.db import models
 class Department(models.Model):
     name = models.CharField(max_length=255)
 
+    # Without the __str__,  Django falls back to Python’s default object representation, Department object (1), instead of something readable
+    def __str__(self):
+        return self.name
+
 class Course(models.Model):
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=20)
