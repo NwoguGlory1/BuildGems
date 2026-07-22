@@ -204,7 +204,7 @@ EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@studentapi.com')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='darajanwogu@gmail.com')
 DEFAULT_FROM_NAME = config('DEFAULT_FROM_NAME', default='Student API')
 
 # Connection timeout in seconds
@@ -219,7 +219,7 @@ from celery.schedules import crontab
 
 CELERY_BEAT_SCHEDULE = {
     "hello-every-minute": {
-        "task": "students.tasks.say_hello",
+        "task": "students.tasks.send_email_to_all_students",
         "schedule": crontab(),
     },
 }

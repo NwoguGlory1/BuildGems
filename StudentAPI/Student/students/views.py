@@ -2,6 +2,7 @@
 # from django.shortcuts import render for normal rendering
 
 # ViewSets provide CRUD operations in one place
+from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -12,6 +13,7 @@ from .serializers import (StudentSerializerV1, StudentSerializerV2)
 from .pagination import StudentPagination
 
 class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
+    permission_classes = [AllowAny]
     queryset = Student.objects.all() #defines the set of objects available via the API.
     serializer_class = StudentSerializerV1 #tells DRF how serialize/deserialize the Student data
     # Custom pagination class
@@ -38,6 +40,7 @@ class StudentViewSet(viewsets.ModelViewSet): #ModelViewSet provides CRUD
     # Manual filtering using .get_queryset()
     def get_queryset(self):
         queryset = super().get_queryset()
+        # super() calls the parent method, ModelViewSet  that has given StudentViewSet a built  in method, self.get_queryset before addin the filtering of my new method, self.get_queryset
         name = self.request.query_params.get('name') 
         id = self.request.query_params.get('id') 
         age = self.request.query_params.get('age') 

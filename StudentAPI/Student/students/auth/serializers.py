@@ -78,21 +78,9 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {"Detail": "Invalid credentials, please check email and password!"}
             )
-        
-        # user = authenticate(username=email, password=password) #django's inbuilt check, not needed cause you did manual authentication
 
-#           Before the line below, it is:
-        # {
-        #     "email": "glory@gmail.com",
-        #     "password": "secret123"
-        # }
         value['user'] = user
-        #After this line above, it becomes;
-#         {
-        #     "email": "glory@gmail.com",
-        #     "password": "secret123",
-        #     "user": <User object>
-# }
+
         return value
     # So ["user"] is just a key you created yourself in the serializer, and DRF stores it in validated_data when you return it.    
 

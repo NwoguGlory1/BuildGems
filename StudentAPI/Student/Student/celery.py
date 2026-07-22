@@ -1,4 +1,5 @@
 # elery.py module that defines the Celery instance:
+# this instance is used as the entry-point for everything you want to do in Celery, like creating tasks and managing workers, it must be possible for other modules to import it.
 import os
 
 from celery import Celery
@@ -11,6 +12,7 @@ os.environ.setdefault(
 
 #app instance
 app = Celery("Student")
+# The first argument to Celery is the name of the current module. 
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
