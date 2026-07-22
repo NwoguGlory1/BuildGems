@@ -220,16 +220,16 @@ from celery.schedules import crontab
 CELERY_BEAT_SCHEDULE = {
     "send-all-students": {
         "task": "students.tasks.send_email_to_all_students",
-        "schedule": crontab(),
+        "schedule": crontab(), #rontab(minute="*/5") means send every 5mi
     },
 
     "birthday-emails": {
         "task": "students.tasks.send_birthday_emails",
-        "schedule": crontab(hour=8, minute=0),
+        "schedule": crontab(hour=8, minute=0), #send birthday email by 8:00
     },
 
     "math-course-emails": {
         "task": "students.tasks.send_math_students_email",
-        "schedule": crontab(hour=9, minute=0),
+        "schedule": crontab(hour=9, minute=0), #sends by 9:00
     },
 }

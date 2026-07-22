@@ -13,20 +13,26 @@ def send_email_to_student(student_id):
 # Task send_email_to_student(student_idcalls send_mail
 # student.department.name
     student = Student.objects.get(pk=student_id)
+    # for debuging:
     # print(settings.EMAIL_HOST)
     # print(settings.EMAIL_PORT)
     # print(settings.EMAIL_USE_TLS)
     # print(settings.EMAIL_HOST_USER)
+    # print(student.name)
+    # print(student.id)
+    # print(student.email)
 
+    message = f"""
+            Hello, {student.name}
+            """
+      
     send_mail(
         subject="Testing Celery",
-            message = f"""
-            Hello, {student.name}
-            """,         
-            from_email= settings.DEFAULT_FROM_EMAIL,  # Use the same Gmail in EMAIL_HOST_USER in .env
-            recipient_list=[student.email],
-            fail_silently=False,
-            )
+        message=message,
+        from_email= settings.DEFAULT_FROM_EMAIL,  # Use the same Gmail in EMAIL_HOST_USER in .env
+        recipient_list=[student.email],
+        fail_silently=False,
+        )
     print("Voila, Email Sent!")
     return
 
@@ -40,19 +46,6 @@ def send_email_to_all_students():
     for student in students:
         send_email_to_student.delay(student.id)
 
-# for debugging to print invalid emails I used initially to create some student accounts that gave me error 
-    # for student in students:
-    #     try:
-    #         send_mail(
-    #                 subject="Testing Celery",
-    #                     message = (f"Hello {student.name}"),
-    #                     from_email= settings.DEFAULT_FROM_EMAIL,  # Use the same Gmail in EMAIL_HOST_USER in .env
-    #                     recipient_list=[student.email],
-    #                     fail_silently=False,
-    #                     )
-    #     except Exception as e:
-    #         print(student.email)
-    #         print(e)
         
 @shared_task
 def send_birthday_emails():
@@ -69,8 +62,14 @@ def send_birthday_emails():
 def send_math_students_email():
 
     maths = Course.objects.get(name="Mathematics")
-
     students = maths.student_set.all()
 
     for student in students:
         send_email_to_student.delay(student.id)
+
+#OR:
+    # students = Student.objects.filter(
+    #     courses__name="Mathematics"
+    #     )
+    # for student in students:
+    #         send_email_to_student.delay(student.id)
