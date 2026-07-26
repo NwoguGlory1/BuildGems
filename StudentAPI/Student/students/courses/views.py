@@ -2,6 +2,8 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from students.models import Course
+from students.serializers import CourseSerializer
 
 COURSES_DATA = [
     {"id": 1, "name": "Introduction to Computer Science", "code": "CS101", "credits": 3},
@@ -13,7 +15,7 @@ COURSES_DATA = [
 ]
 
 class CourseListView(APIView):
-    # GET /api/v1/auth/courses/
+    # GET /api/v1/courses/
 
     def get(self, request, *args, **kwargs):
         # Django may pass URL keyword arguments such as version from the URL pattern.
@@ -23,18 +25,27 @@ class CourseListView(APIView):
             "data": COURSES_DATA,
         })
     
-# class CourseDetailView(APIView):
-#     """GET /api/v1/courses/<int:course_id>/"""
-#     def get(self, request, course_id,  *args, **kwargs):
-#         course = next(
-#             (c for c in COURSES_DATA if c["id"] == course_id),
-#             None
-#         )
+class CourseStudentView(APIView):
+    # """GET /api/v1/courses/students/"""
+    def get(self, request,  *args, **kwargs):
+        query_set = Course.objects.all()
+        # query_set = Course.objects.get(name="Mathematics")
+        serializer_class = CourseSerializer(query_set, many=True)  #tells DRF how serialize/deserialize the Course data
+        data = serializer_class.data
 
-#         if not course:
-#             return Response(
-#                 {"detail": f"Course with id {course_id} not found."},
-#                 status=404,
-#             )
+        return Response(
+           {
+              "data": data,
+           }   
+        )
+    def post(self, request,  *args, **kwargs):
+        # """" POST {{student_base_url}}/v1/courses/students/"""
+        serializer = CourseSerializer(data=request.data)
 
-#         return Response({"data": course})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+
+        return Response(serializer.errors, status=400)
+
+

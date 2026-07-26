@@ -3,9 +3,10 @@
 from rest_framework import serializers
 from .models import Student, Department, Course
 
-class StudentSerializer(serializers.ModelSerializer):
-    """Serialize student data and accept department/course names in incoming payloads."""
-    department = serializers.SlugRelatedField(
+class StudentSerializerV1(serializers.ModelSerializer):
+    "handles serialization & deserialization of student data automatically when using ModelViewSet"
+#understand why this highlighted part
+    department = serializers.SlugRelatedField( #Slug helps : Instead of looking up objects by their ID, look them up by another field
         queryset=Department.objects.all(),
         slug_field='name',
         required=False,
@@ -24,17 +25,19 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'age', 'email', 'department', 'birthday', 'courses']
 
 
-class StudentSerializerV1(StudentSerializer):
-    """Version 1 exposes the full student payload for the API."""
-    pass
-
-
-class StudentSerializerV2(StudentSerializer):
-    """Version 2 keeps the same payload structure for compatibility."""
-    pass
+class StudentSerializerV2(serializers.ModelSerializer):
+    "handles serialization & deserialization automatically when using ModelViewSet"
+    class Meta:
+        model = Student
+        fields = ['id', 'name', 'age', 'email', 'department' ]
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
         fields = ['id', 'name']
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ['id', 'name', 'code']
