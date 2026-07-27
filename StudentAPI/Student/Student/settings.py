@@ -225,7 +225,7 @@ CELERY_BEAT_SCHEDULE = {
 
     "birthday-emails": {
         "task": "students.tasks.send_birthday_emails",
-        "schedule": crontab(hour=1, minute=0), #send birthday email by 8:00
+        "schedule": crontab(hour=9, minute=45), #send birthday email by 8:00
     },
 
     "math-course-emails": {
