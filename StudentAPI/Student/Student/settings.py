@@ -233,3 +233,6 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": crontab(hour=12, minute=0), #sends by 9:00
     },
 }
+
+COUNTRIES_API_BASE_URL = config("COUNTRIES_API_BASE_URL")
+COUNTRIES_API_KEY = config("COUNTRIES_API_KEY")
