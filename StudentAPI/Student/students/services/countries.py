@@ -23,4 +23,21 @@ class CountryService:
             timeout=10,
         )
 
-        return response.json()
+        response.raise_for_status()
+        data = response.json()
+
+        country = data["data"]["objects"][0]
+        return {
+
+            "name": country["names"]["common"],
+
+            "official_name": country["names"]["official"],
+
+            "capital": country["capitals"][0]["name"],
+
+            "region": country["region"],
+
+            "subregion": country["subregion"],
+
+            "flag": country["flag"]["emoji"],
+        }
