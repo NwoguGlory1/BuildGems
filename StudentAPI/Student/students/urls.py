@@ -20,6 +20,8 @@ urlpatterns = [
     path('courses/', CourseListView.as_view(), name='course-list'),
     path('courses/students/', CourseStudentView.as_view(), name='course-student'),
     path('departments/', DepartmentListView.as_view(), name='department-list'),
+
     path('countries/<str:country>/', CountryAPIView.as_view(), name="country-detail"),
+    # this helps to create a standalone api that anyone can call and it will internally call the external integrated API, RestCountries API http://127.0.0.1:8000/api/v1/countries/Nigeria/
 ]
 # Using DefaultRouter, don’t need to manually define each URL for CRUD operations. It automatically creates standard RESTful endpoints 

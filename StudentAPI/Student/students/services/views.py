@@ -27,6 +27,7 @@ class CountryAPIView(APIView):
             )
 
         # Step 2: Cache miss → call external API
+        # accesses the get_country method in CountryService class in services/countries.py
         data = CountryService.get_country(country)
 
         # Step 3: Store in Redis
