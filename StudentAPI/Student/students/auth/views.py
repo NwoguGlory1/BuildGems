@@ -67,7 +67,7 @@ class LoginView(APIView):
                 # decorator alone can't see before validation.
                 from .rate_limiter import check_rate_limit
  
-                attempted_email = request.data.get("email", "unknown")
+                attempted_email = request.data.get("email", "unknown").strip().lower()
                 email_key = f"ratelimit:login-email:{attempted_email}"
                 email_result = check_rate_limit(email_key, limit=5, window_seconds=300)
         
