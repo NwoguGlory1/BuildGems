@@ -5,6 +5,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import LoginSerializer, SignUpSerializer
 from  rest_framework.response import Response
 from rest_framework import status
+from .rate_limiter import rate_limit, get_client_ip
+
 
 
 def get_tokens_for_user(user):
@@ -19,6 +21,11 @@ def get_tokens_for_user(user):
 class SignUpView(APIView):
     """public endpoint POST /api/v1/auth/signup"""
     permission_classes = [AllowAny]
+
+    # Signups are cheap to abuse (bots creating fake accounts / spamming
+    # email delivery via your send_email_to_student task). 5 signups per
+    # IP per 10 minutes is generous for a real user, painful for a bot.
+    @rate_limit(limit=5, window_seconds=600, scope="signup")
 
     def post(self, request,  *args, **kwargs):
         #args and kwargs takes care of the /api/v1/students/5/ kwargs = {"pk": 5} 
@@ -47,7 +54,35 @@ class LoginView(APIView):
            """public endpoint POST /api/v1/auth/login"""
            permission_classes = [AllowAny]
            #every view is protected because of in settings.py but you override the views you want with this
+           
+               # --- Rate limit #1: by IP address ---
+            # Stops a single machine hammering the login endpoint (brute force /
+            # credential stuffing). 5 attempts per 5 minutes per IP.
+            # @rate_limit(limit=5, window_seconds=300, scope="login-ip")
+           
            def post(self, request,  *args, **kwargs):
+                # --- Rate limit #2: by the email/username being attempted ---
+                # This is checked manually inside the method because the key depends on request
+                # BODY data (email), not just the request itself, which the
+                # decorator alone can't see before validation.
+                from .rate_limiter import check_rate_limit
+ 
+                attempted_email = request.data.get("email", "unknown")
+                email_key = f"ratelimit:login-email:{attempted_email}"
+                email_result = check_rate_limit(email_key, limit=5, window_seconds=300)
+        
+                if not email_result["allowed"]:
+                    return Response(
+                        {
+                    "detail": "Too many login attempts for this account. Try again shortly.",
+                    "retry_after_seconds": email_result["retry_after"],
+                },
+                status=status.HTTP_429_TOO_MANY_REQUESTS,
+                headers={"Retry-After": str(email_result["retry_after"])},
+                    )
+ 
+
+
                 serializer = LoginSerializer(data=request.data)
             
                 if not serializer.is_valid():

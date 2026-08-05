@@ -146,6 +146,17 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
 
+        "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",   # unauthenticated users, keyed by IP
+        "rest_framework.throttling.UserRateThrottle",   # authenticated users, keyed by user id
+    ],
+
+     "DEFAULT_THROTTLE_RATES": {
+        "anon": "60/min",   # generous enough for real browsing, painful for scrapers
+        "user": "300/min",  # logged-in students/staff get a much higher ceiling
+    },
+
+
 # Global pagination
     # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
     # 'DEFAULT_VERSION': 'v1',
@@ -232,7 +243,12 @@ CELERY_BEAT_SCHEDULE = {
         "task": "students.tasks.send_math_students_email",
         "schedule": crontab(hour=12, minute=0), #sends by 9:00
     },
+
 }
+
+
 
 COUNTRIES_API_BASE_URL = config("COUNTRIES_API_BASE_URL")
 COUNTRIES_API_KEY = config("COUNTRIES_API_KEY")
+
+
